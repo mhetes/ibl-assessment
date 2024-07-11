@@ -11,13 +11,13 @@ import type { JsonRpcResponse } from '../model/JsonRpcResponse';
 const query = async (req: OpmetRequest): Promise<OpmetResult[]> => {
     const res = await fetch('https://ogcie.iblsoft.com/ria/opmetquery', {
         method: 'POST',
-        body: JSON.stringify(JsonRpcHelper.createRequest('query', req, req.id)),
+        body: JSON.stringify(JsonRpcHelper.createRequest('query', [req], req.id)),
         headers: {
             accept: 'application/json',
             'content-type': 'application/json',
         }
     });
-    const data = await res.json() as JsonRpcResponse<OpmetResult[]>;
+    const data = await res.json() as JsonRpcResponse<OpmetResult>;
     return JsonRpcHelper.parseResponse(data);
 };
 

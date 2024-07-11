@@ -28,7 +28,7 @@ export class JsonRpcException<E = object> extends Error {
  * @param forceId Id of JSON-RPC request to force. If empty it will be generated automatically
  * @returns JSON-RPC Request
  */
-const createRequest = <T>(method: string, params: T, forceId?: string): JsonRpcRequest<T> => {
+const createRequest = <T>(method: string, params: T[], forceId?: string): JsonRpcRequest<T> => {
     return {
         id: forceId ?? v4(),
         method,
@@ -41,7 +41,7 @@ const createRequest = <T>(method: string, params: T, forceId?: string): JsonRpcR
  * @param res JSON-RPC Response payload
  * @returns RPC response
  */
-const parseResponse = <T, E = object>(res: JsonRpcResponse<T, E>): T => {
+const parseResponse = <T, E = object>(res: JsonRpcResponse<T, E>): T[] => {
     if (res.error) {
         throw new JsonRpcException<E>(res.error);
     }

@@ -7,21 +7,21 @@ jest.mock('uuid', () => { return { v4: () => fallbackUuid }; });
 
 describe('JsonRpcHelper tests', () => {
     it('creates JSON-RPC payload', () => {
-        const res = JsonRpcHelper.createRequest('run', internalPayload);
+        const res = JsonRpcHelper.createRequest('run', [internalPayload]);
         expect(res).toEqual({
             id: fallbackUuid,
             method: 'run',
-            params: internalPayload,
+            params: [internalPayload],
         });
     });
 
     it('creates JSON-RPC payload with predefined id', () => {
         const myUuid = 'bf1af7b1-1a0b-41bc-a678-92d3d0371c35';
-        const res = JsonRpcHelper.createRequest('run', internalPayload, myUuid);
+        const res = JsonRpcHelper.createRequest('run', [internalPayload], myUuid);
         expect(res).toEqual({
             id: myUuid,
             method: 'run',
-            params: internalPayload,
+            params: [internalPayload],
         });
     });
 
@@ -29,10 +29,10 @@ describe('JsonRpcHelper tests', () => {
         const received = {
             id: 123,
             error: null,
-            result: internalPayload,
+            result: [internalPayload],
         };
         const res = JsonRpcHelper.parseResponse(received);
-        expect(res).toEqual(internalPayload);
+        expect(res).toEqual([internalPayload]);
     });
 
     it('throw error on invalid JSON-RPC response', () => {
