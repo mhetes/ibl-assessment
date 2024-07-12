@@ -16,8 +16,8 @@ export const OpmetTableStation = ({...props}: React.PropsWithoutRef<OpmetTableSt
                 </tr>
             </thead>
             <tbody>
-                { props.reports.map((report) =>
-                    <OpmetTableReport key={'opmet_' + props.station + report.reportType} report={report} /> )
+                { props.reports.map((report, i) =>
+                    <OpmetTableReport key={'opmet_' + props.station + report.reportType + i} report={report} /> )
                 }
             </tbody>
         </>

@@ -1,25 +1,46 @@
 import React from 'react';
+import { v4 } from 'uuid';
+import { formatDate, parseReportFragmets } from '../api/UiHelper';
 import type { OpmetResult } from '../model/OpmetResult';
+import { EFragmentType } from '../model/EFragmentType';
 
 type OpmetTableReportProps = {
     report: OpmetResult;
 };
 
-const formatDate = (date: string): string => {
-    return `${date.substring(8, 10)}.${date.substring(5, 7)}.${date.substring(0, 4)} ${date.substring(11, 19)}`;
-};
+const formatReport = (text: string): JSX.Element => {
+    const fragments = parseReportFragmets(text);
+    const elements: JSX.Element[] = [];
 
-const getReportHtml = (text: string, textHTML?: string): string => {
-    const html = textHTML ?? text;
-    return html.replace(/\r/g, '').replace(/\n{2,}/g, '\n').replace(/\n/g, '<br/>').replace(/(<br\/>){2,}/g, '<br/>').replace(/ {2,}/g, ' &nbsp;&nbsp;&nbsp;');
-};
+    fragments.forEach((fragment) => {
+        switch (fragment.type) {
+            case EFragmentType.normal:
+                elements.push(<React.Fragment key={v4()}>{fragment.text}</React.Fragment>);
+                break;
+            case EFragmentType.red:
+                elements.push(<span key={v4()} className='text-danger'>{fragment.text}</span>);
+                break;
+            case EFragmentType.blue:
+                elements.push(<span key={v4()} className='text-primary'>{fragment.text}</span>);
+                break;
+            case EFragmentType.line:
+                elements.push(<br key={v4()}/>);
+        }
+    });
+
+    return (
+        <>
+            {elements}
+        </>
+    );
+}
 
 export const OpmetTableReport = ({...props}: React.PropsWithoutRef<OpmetTableReportProps>): JSX.Element => {
     return (
         <tr>
-            <td>{props.report.reportType}</td>
+            <td>{props.report.queryType}</td>
             <td>{formatDate(props.report.reportTime)}</td>
-            <td dangerouslySetInnerHTML={{__html: getReportHtml(props.report.text, props.report.textHTML)}} />
+            <td>{formatReport(props.report.text)}</td>
         </tr>
     )
 };
